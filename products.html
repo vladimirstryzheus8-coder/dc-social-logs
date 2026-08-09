@@ -1,0 +1,795 @@
+{% extends "base.html" %}
+
+{% block title %}
+Products | DC SOCIAL LOGS 🪵
+{% endblock %}
+
+{% block content %}
+
+<section class="page-header">
+
+    <div>
+        <span class="section-label">MARKETPLACE</span>
+
+        <h1>
+            Digital <span>Products</span>
+        </h1>
+
+        <p>
+            Discover products and services available on DC SOCIAL LOGS.
+        </p>
+    </div>
+
+</section>
+
+
+<!-- SEARCH & FILTERS -->
+
+<section class="catalog-controls">
+
+    <form method="GET"
+          action="{{ url_for('products') }}"
+          class="search-form">
+
+        <div class="search-box">
+
+            <span>🔎</span>
+
+            <input
+                type="search"
+                name="q"
+                value="{{ request.args.get('q', '') }}"
+                placeholder="Search products..."
+            >
+
+            <button type="submit">
+                Search
+            </button>
+
+        </div>
+
+    </form>
+
+
+    <div class="filter-row">
+
+        <div class="filter-group">
+
+            <label for="category">
+                Category
+            </label>
+
+            <select
+                id="category"
+                name="category"
+                onchange="this.form.submit()"
+                form="filterForm">
+
+                <option value="">
+                    All Categories
+                </option>
+
+                {% for category in categories %}
+
+                    <option
+                        value="{{ category.id }}"
+                        {% if request.args.get('category') == category.id|string %}
+                            selected
+                        {% endif %}
+                    >
+
+                        {{ category.name }}
+
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+        <div class="filter-group">
+
+            <label for="sort">
+                Sort By
+            </label>
+
+            <select
+                id="sort"
+                name="sort"
+                onchange="this.form.submit()"
+                form="filterForm">
+
+                <option value="">
+                    Recommended
+                </option>
+
+                <option
+                    value="newest"
+                    {% if request.args.get('sort') == 'newest' %}
+                        selected
+                    {% endif %}
+                >
+                    Newest
+                </option>
+
+                <option
+                    value="price_low"
+                    {% if request.args.get('sort') == 'price_low' %}
+                        selected
+                    {% endif %}
+                >
+                    Price: Low to High
+                </option>
+
+                <option
+                    value="price_high"
+                    {% if request.args.get('sort') == 'price_high' %}
+                        selected
+                    {% endif %}
+                >
+                    Price: High to Low
+                </option>
+
+                <option
+                    value="popular"
+                    {% if request.args.get('sort') == 'popular' %}
+                        selected
+                    {% endif %}
+                >
+                    Most Popular
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="filter-group">
+
+            <label for="stock">
+                Availability
+            </label>
+
+            <select
+                id="stock"
+                name="stock"
+                onchange="this.form.submit()"
+                form="filterForm">
+
+                <option value="">
+                    All Products
+                </option>
+
+                <option
+                    value="in_stock"
+                    {% if request.args.get('stock') == 'in_stock' %}
+                        selected
+                    {% endif %}
+                >
+                    In Stock
+                </option>
+
+                <option
+                    value="out_of_stock"
+                    {% if request.args.get('stock') == 'out_of_stock' %}
+                        selected
+                    {% endif %}
+                >
+                    Out of Stock
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <form
+        id="filterForm"
+        method="GET"
+        action="{{ url_for('products') }}"
+        hidden>
+
+        <input
+            type="hidden"
+            name="q"
+            value="{{ request.args.get('q', '') }}"
+        >
+
+        <input
+            type="hidden"
+            name="category"
+            id="filterCategory"
+            value="{{ request.args.get('category', '') }}"
+        >
+
+        <input
+            type="hidden"
+            name="sort"
+            id="filterSort"
+            value="{{ request.args.get('sort', '') }}"
+        >
+
+        <input
+            type="hidden"
+            name="stock"
+            id="filterStock"
+            value="{{ request.args.get('stock', '') }}"
+        >
+
+    </form>
+
+</section>
+
+
+<!-- CATEGORY QUICK LINKS -->
+
+{% if categories %}
+
+<section class="quick-categories">
+
+    <a
+        href="{{ url_for('products') }}"
+        class="quick-category {% if not request.args.get('category') %}active{% endif %}">
+
+        <span>✨</span>
+        All
+
+    </a>
+
+
+    {% for category in categories %}
+
+        <a
+            href="{{ url_for(
+                'products',
+                category=category.id
+            ) }}"
+            class="quick-category
+            {% if request.args.get('category') == category.id|string %}
+                active
+            {% endif %}">
+
+            <span>
+                {{ category.icon or '📦' }}
+            </span>
+
+            {{ category.name }}
+
+        </a>
+
+    {% endfor %}
+
+</section>
+
+{% endif %}
+
+
+<!-- PRODUCT RESULTS -->
+
+<section class="products-section">
+
+    {% if products %}
+
+        <div class="catalog-topbar">
+
+            <p>
+
+                Showing
+                <strong>{{ products|length }}</strong>
+                product{% if products|length != 1 %}s{% endif %}
+
+            </p>
+
+            {% if request.args.get('q') %}
+
+                <span>
+                    Search:
+                    <strong>
+                        "{{ request.args.get('q') }}"
+                    </strong>
+                </span>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="product-grid">
+
+            {% for product in products %}
+
+                <article class="product-card">
+
+                    <!-- PRODUCT IMAGE -->
+
+                    <a
+                        href="{{ url_for(
+                            'product_detail',
+                            slug=product.slug
+                        ) }}"
+                        class="product-image">
+
+                        {% if product.image %}
+
+                            <img
+                                src="{{ product.image }}"
+                                alt="{{ product.name }}"
+                                loading="lazy"
+                            >
+
+                        {% else %}
+
+                            <div class="product-placeholder">
+                                🛍️
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if product.stock <= 0 %}
+
+                            <span class="stock-badge out">
+                                Out of Stock
+                            </span>
+
+                        {% elif product.stock <= 5 %}
+
+                            <span class="stock-badge low">
+                                Only {{ product.stock }} left
+                            </span>
+
+                        {% else %}
+
+                            <span class="stock-badge">
+                                In Stock
+                            </span>
+
+                        {% endif %}
+
+
+                        {% if product.is_featured %}
+
+                            <span class="featured-badge">
+                                ⭐ Featured
+                            </span>
+
+                        {% endif %}
+
+                    </a>
+
+
+                    <!-- PRODUCT INFO -->
+
+                    <div class="product-body">
+
+                        <div class="product-category">
+
+                            {% if product.category %}
+
+                                {{ product.category.name }}
+
+                            {% else %}
+
+                                Digital Product
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <h3>
+
+                            <a
+                                href="{{ url_for(
+                                    'product_detail',
+                                    slug=product.slug
+                                ) }}">
+
+                                {{ product.name }}
+
+                            </a>
+
+                        </h3>
+
+
+                        <p class="product-description">
+
+                            {% if product.description %}
+
+                                {{ product.description[:110] }}
+
+                                {% if product.description|length > 110 %}
+                                    ...
+                                {% endif %}
+
+                            {% else %}
+
+                                Premium digital product.
+
+                            {% endif %}
+
+                        </p>
+
+
+                        <!-- PRICE -->
+
+                        <div class="product-pricing">
+
+                            {% if product.old_price and
+                                  product.old_price|float > product.price|float %}
+
+                                <span class="old-price">
+
+                                    ₦{{ "{:,.2f}".format(
+                                        product.old_price|float
+                                    ) }}
+
+                                </span>
+
+                            {% endif %}
+
+
+                            <strong class="product-price">
+
+                                ₦{{ "{:,.2f}".format(
+                                    product.price|float
+                                ) }}
+
+                            </strong>
+
+                        </div>
+
+
+                        <!-- BULK DISCOUNT -->
+
+                        {% if product.bulk_discount_enabled %}
+
+                            <div class="bulk-discount">
+
+                                🏷️
+
+                                Buy
+                                {{ product.bulk_min_quantity or 1 }}
+                                -
+                                {{ product.bulk_max_quantity or 5 }}
+
+                                and save
+
+                                {{ product.bulk_discount_percent or 5 }}%
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- ACTIONS -->
+
+                        <div class="product-bottom">
+
+                            {% if product.stock > 0 %}
+
+                                {% if current_user.is_authenticated %}
+
+                                    <form
+                                        method="POST"
+                                        action="{{ url_for(
+                                            'add_to_cart',
+                                            product_id=product.id
+                                        ) }}"
+                                        class="product-cart-form">
+
+                                        <input
+                                            type="number"
+                                            name="quantity"
+                                            value="1"
+                                            min="1"
+                                            max="{{ product.stock }}"
+                                            class="quantity-input"
+                                        >
+
+                                        <button
+                                            type="submit"
+                                            class="add-cart-btn">
+
+                                            🛒 Add
+
+                                        </button>
+
+                                    </form>
+
+
+                                    <a
+                                        href="{{ url_for(
+                                            'product_detail',
+                                            slug=product.slug
+                                        ) }}"
+                                        class="buy-now-btn">
+
+                                        Buy Now
+
+                                    </a>
+
+                                {% else %}
+
+                                    <a
+                                        href="{{ url_for('login') }}"
+                                        class="btn btn-primary product-login-btn">
+
+                                        Login To Buy
+
+                                    </a>
+
+                                {% endif %}
+
+                            {% else %}
+
+                                <button
+                                    type="button"
+                                    class="btn btn-disabled"
+                                    disabled>
+
+                                    Out of Stock
+
+                                </button>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- PAGINATION -->
+
+        {% if pagination %}
+
+            <div class="pagination">
+
+                {% if pagination.has_prev %}
+
+                    <a
+                        href="{{ url_for(
+                            'products',
+                            page=pagination.prev_num,
+                            q=request.args.get('q'),
+                            category=request.args.get('category'),
+                            sort=request.args.get('sort'),
+                            stock=request.args.get('stock')
+                        ) }}">
+
+                        ← Previous
+
+                    </a>
+
+                {% endif %}
+
+
+                {% for page_num in pagination.iter_pages(
+                    left_edge=1,
+                    right_edge=1,
+                    left_current=2,
+                    right_current=2
+                ) %}
+
+                    {% if page_num %}
+
+                        {% if page_num == pagination.page %}
+
+                            <span class="active">
+                                {{ page_num }}
+                            </span>
+
+                        {% else %}
+
+                            <a
+                                href="{{ url_for(
+                                    'products',
+                                    page=page_num,
+                                    q=request.args.get('q'),
+                                    category=request.args.get('category'),
+                                    sort=request.args.get('sort'),
+                                    stock=request.args.get('stock')
+                                ) }}">
+
+                                {{ page_num }}
+
+                            </a>
+
+                        {% endif %}
+
+                    {% else %}
+
+                        <span class="pagination-dots">
+                            …
+                        </span>
+
+                    {% endif %}
+
+                {% endfor %}
+
+
+                {% if pagination.has_next %}
+
+                    <a
+                        href="{{ url_for(
+                            'products',
+                            page=pagination.next_num,
+                            q=request.args.get('q'),
+                            category=request.args.get('category'),
+                            sort=request.args.get('sort'),
+                            stock=request.args.get('stock')
+                        ) }}">
+
+                        Next →
+
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        {% endif %}
+
+
+    {% else %}
+
+        <!-- EMPTY STATE -->
+
+        <div class="empty-state large">
+
+            <div class="empty-icon">
+                🔎
+            </div>
+
+            <h2>
+                No Products Found
+            </h2>
+
+            <p>
+
+                {% if request.args.get('q') %}
+
+                    We couldn't find any product matching
+                    "<strong>{{ request.args.get('q') }}</strong>".
+
+                {% else %}
+
+                    There are currently no products available
+                    in this category.
+
+                {% endif %}
+
+            </p>
+
+
+            <a
+                href="{{ url_for('products') }}"
+                class="btn btn-primary">
+
+                View All Products
+
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+
+<!-- BULK DISCOUNT INFO -->
+
+<section class="promo-section catalog-promo">
+
+    <div class="promo-content">
+
+        <div class="promo-icon">
+            🏷️
+        </div>
+
+        <div>
+
+            <span class="promo-label">
+                BULK PURCHASE
+            </span>
+
+            <h2>
+                Save Up To 5%
+            </h2>
+
+            <p>
+                Eligible bulk purchases can receive
+                automatic discounts according to the
+                current marketplace rules.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for('cart') }}"
+            class="btn btn-light">
+
+            View Cart →
+
+        </a>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const category = document.getElementById("category");
+    const sort = document.getElementById("sort");
+    const stock = document.getElementById("stock");
+
+    const filterCategory =
+        document.getElementById("filterCategory");
+
+    const filterSort =
+        document.getElementById("filterSort");
+
+    const filterStock =
+        document.getElementById("filterStock");
+
+
+    if (category && filterCategory) {
+
+        category.addEventListener("change", function () {
+
+            filterCategory.value = this.value;
+
+            document.getElementById("filterForm").submit();
+
+        });
+
+    }
+
+
+    if (sort && filterSort) {
+
+        sort.addEventListener("change", function () {
+
+            filterSort.value = this.value;
+
+            document.getElementById("filterForm").submit();
+
+        });
+
+    }
+
+
+    if (stock && filterStock) {
+
+        stock.addEventListener("change", function () {
+
+            filterStock.value = this.value;
+
+            document.getElementById("filterForm").submit();
+
+        });
+
+    }
+
+});
+
+</script>
+
+{% endblock %}

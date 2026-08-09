@@ -1,0 +1,788 @@
+{% extends "base.html" %}
+
+{% block title %}
+DC SOCIAL LOGS 🪵 | Your Digital World, Delivered Instantly.
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="hero-section">
+
+    <div class="hero-content">
+
+        <span class="hero-badge">
+            🪵 DC SOCIAL LOGS
+        </span>
+
+        <h1>
+            Your Digital World,
+            <span>Delivered Instantly.</span>
+        </h1>
+
+        <p>
+            Discover premium digital products, services,
+            and subscriptions — all in one place.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a href="{{ url_for('products') }}"
+               class="btn btn-primary">
+                🛍️ Shop Now
+            </a>
+
+            {% if not current_user.is_authenticated %}
+
+                <a href="{{ url_for('register') }}"
+                   class="btn btn-secondary">
+                    Create Account
+                </a>
+
+            {% else %}
+
+                <a href="{{ url_for('dashboard') }}"
+                   class="btn btn-secondary">
+                    Go To Dashboard
+                </a>
+
+            {% endif %}
+
+        </div>
+
+        <div class="hero-trust">
+
+            <span>✓ Secure Payments</span>
+            <span>✓ Fast Delivery</span>
+            <span>✓ 24/7 Support</span>
+
+        </div>
+
+    </div>
+
+
+    <div class="hero-visual">
+
+        <div class="hero-card main-hero-card">
+
+            <div class="hero-card-icon">
+                🛒
+            </div>
+
+            <h3>
+                Digital Marketplace
+            </h3>
+
+            <p>
+                Everything you need in one place.
+            </p>
+
+            <div class="hero-card-stats">
+
+                <div>
+                    <strong>⚡</strong>
+                    <small>Fast</small>
+                </div>
+
+                <div>
+                    <strong>🔒</strong>
+                    <small>Secure</small>
+                </div>
+
+                <div>
+                    <strong>💳</strong>
+                    <small>Easy Pay</small>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="floating-card floating-card-one">
+            ⚡ Instant Delivery
+        </div>
+
+        <div class="floating-card floating-card-two">
+            🔒 Secure Checkout
+        </div>
+
+        <div class="floating-card floating-card-three">
+            🎁 Referral Rewards
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FEATURES -->
+<section class="section">
+
+    <div class="section-heading">
+
+        <span class="section-label">
+            WHY CHOOSE US
+        </span>
+
+        <h2>
+            Everything You Need,
+            <span>In One Place.</span>
+        </h2>
+
+        <p>
+            A simple and convenient way to discover
+            and purchase digital products.
+        </p>
+
+    </div>
+
+
+    <div class="feature-grid">
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                ⚡
+            </div>
+
+            <h3>
+                Instant Delivery
+            </h3>
+
+            <p>
+                Receive eligible digital products
+                automatically after successful payment.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                🔒
+            </div>
+
+            <h3>
+                Secure Payments
+            </h3>
+
+            <p>
+                Pay securely through our integrated
+                payment system.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                🛍️
+            </div>
+
+            <h3>
+                Wide Selection
+            </h3>
+
+            <p>
+                Browse products and services across
+                multiple categories.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                💬
+            </div>
+
+            <h3>
+                24/7 Support
+            </h3>
+
+            <p>
+                Get assistance through our available
+                support channels.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                💰
+            </div>
+
+            <h3>
+                Easy Wallet
+            </h3>
+
+            <p>
+                Deposit funds and conveniently use
+                your wallet balance for purchases.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                🎁
+            </div>
+
+            <h3>
+                Referral Rewards
+            </h3>
+
+            <p>
+                Invite friends and earn rewards when
+                the referral program requirements are met.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- CATEGORIES -->
+<section class="section categories-section">
+
+    <div class="section-heading">
+
+        <span class="section-label">
+            EXPLORE
+        </span>
+
+        <h2>
+            Shop By <span>Category</span>
+        </h2>
+
+        <p>
+            Find what you need quickly.
+        </p>
+
+    </div>
+
+
+    <div class="category-grid">
+
+        {% if categories %}
+
+            {% for category in categories %}
+
+                <a href="{{ url_for(
+                    'category_products',
+                    category_id=category.id
+                ) }}"
+                   class="category-card">
+
+                    <div class="category-icon">
+
+                        {% if category.icon %}
+                            {{ category.icon }}
+                        {% else %}
+                            📦
+                        {% endif %}
+
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            {{ category.name }}
+                        </h3>
+
+                        <p>
+                            {{ category.products|length }}
+                            product{% if category.products|length != 1 %}s{% endif %}
+                        </p>
+
+                    </div>
+
+                    <span class="category-arrow">
+                        →
+                    </span>
+
+                </a>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    📦
+                </div>
+
+                <h3>
+                    Categories Coming Soon
+                </h3>
+
+                <p>
+                    Our categories will appear here
+                    once they are added from the admin panel.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+
+<!-- PRODUCTS -->
+<section class="section">
+
+    <div class="section-heading section-heading-row">
+
+        <div>
+
+            <span class="section-label">
+                MARKETPLACE
+            </span>
+
+            <h2>
+                Featured <span>Products</span>
+            </h2>
+
+        </div>
+
+        <a href="{{ url_for('products') }}"
+           class="view-all-link">
+
+            View All →
+            
+        </a>
+
+    </div>
+
+
+    {% if products %}
+
+        <div class="product-grid">
+
+            {% for product in products %}
+
+                <article class="product-card">
+
+                    <a href="{{ url_for(
+                        'product_detail',
+                        slug=product.slug
+                    ) }}"
+                       class="product-image">
+
+                        {% if product.image %}
+
+                            <img
+                                src="{{ product.image }}"
+                                alt="{{ product.name }}"
+                                loading="lazy"
+                            >
+
+                        {% else %}
+
+                            <div class="product-placeholder">
+                                🛍️
+                            </div>
+
+                        {% endif %}
+
+                        {% if product.stock <= 0 %}
+
+                            <span class="stock-badge out">
+                                Out of Stock
+                            </span>
+
+                        {% elif product.stock <= 5 %}
+
+                            <span class="stock-badge low">
+                                Only {{ product.stock }} left
+                            </span>
+
+                        {% else %}
+
+                            <span class="stock-badge">
+                                In Stock
+                            </span>
+
+                        {% endif %}
+
+                    </a>
+
+
+                    <div class="product-body">
+
+                        <div class="product-category">
+
+                            {% if product.category %}
+                                {{ product.category.name }}
+                            {% else %}
+                                Digital Product
+                            {% endif %}
+
+                        </div>
+
+                        <h3>
+
+                            <a href="{{ url_for(
+                                'product_detail',
+                                slug=product.slug
+                            ) }}">
+
+                                {{ product.name }}
+
+                            </a>
+
+                        </h3>
+
+                        <p class="product-description">
+
+                            {{ product.description[:100] }}
+
+                            {% if product.description|length > 100 %}
+                                ...
+                            {% endif %}
+
+                        </p>
+
+
+                        <div class="product-bottom">
+
+                            <div class="product-price">
+
+                                ₦{{ "{:,.2f}".format(
+                                    product.price|float
+                                ) }}
+
+                            </div>
+
+                            {% if product.stock > 0 %}
+
+                                {% if current_user.is_authenticated %}
+
+                                    <form method="POST"
+                                          action="{{ url_for(
+                                              'add_to_cart',
+                                              product_id=product.id
+                                          ) }}">
+
+                                        <input
+                                            type="hidden"
+                                            name="quantity"
+                                            value="1"
+                                        >
+
+                                        <button
+                                            type="submit"
+                                            class="add-cart-btn"
+                                            title="Add to Cart">
+
+                                            +
+
+                                        </button>
+
+                                    </form>
+
+                                {% else %}
+
+                                    <a href="{{ url_for('login') }}"
+                                       class="add-cart-btn">
+
+                                        +
+
+                                    </a>
+
+                                {% endif %}
+
+                            {% else %}
+
+                                <button
+                                    class="add-cart-btn disabled"
+                                    disabled>
+
+                                    ×
+
+                                </button>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-state large">
+
+            <div class="empty-icon">
+                🛍️
+            </div>
+
+            <h3>
+                Products Coming Soon
+            </h3>
+
+            <p>
+                Products added from the admin panel
+                will appear here automatically.
+            </p>
+
+            <a href="{{ url_for('products') }}"
+               class="btn btn-primary">
+
+                Browse Products
+
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+
+<!-- BULK DISCOUNT -->
+<section class="promo-section">
+
+    <div class="promo-content">
+
+        <div class="promo-icon">
+            🛍️
+        </div>
+
+        <div>
+
+            <span class="promo-label">
+                BULK PURCHASE
+            </span>
+
+            <h2>
+                Buy More, Save More
+            </h2>
+
+            <p>
+                Purchase between 1–5 units of eligible products
+                and get up to <strong>5% discount</strong>
+                according to the configured bulk-purchase rules.
+            </p>
+
+        </div>
+
+        <a href="{{ url_for('products') }}"
+           class="btn btn-light">
+
+            Shop Now →
+
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- HOW IT WORKS -->
+<section class="section">
+
+    <div class="section-heading">
+
+        <span class="section-label">
+            SIMPLE PROCESS
+        </span>
+
+        <h2>
+            How It <span>Works</span>
+        </h2>
+
+        <p>
+            Getting your digital products is easy.
+        </p>
+
+    </div>
+
+
+    <div class="steps-grid">
+
+        <div class="step-card">
+
+            <span class="step-number">
+                01
+            </span>
+
+            <div class="step-icon">
+                👤
+            </div>
+
+            <h3>
+                Create Account
+            </h3>
+
+            <p>
+                Register for a free account
+                in just a few moments.
+            </p>
+
+        </div>
+
+
+        <div class="step-card">
+
+            <span class="step-number">
+                02
+            </span>
+
+            <div class="step-icon">
+                🔎
+            </div>
+
+            <h3>
+                Browse Products
+            </h3>
+
+            <p>
+                Explore categories and
+                find what you need.
+            </p>
+
+        </div>
+
+
+        <div class="step-card">
+
+            <span class="step-number">
+                03
+            </span>
+
+            <div class="step-icon">
+                💳
+            </div>
+
+            <h3>
+                Deposit & Checkout
+            </h3>
+
+            <p>
+                Fund your wallet and
+                complete your purchase.
+            </p>
+
+        </div>
+
+
+        <div class="step-card">
+
+            <span class="step-number">
+                04
+            </span>
+
+            <div class="step-icon">
+                ⚡
+            </div>
+
+            <h3>
+                Receive Product
+            </h3>
+
+            <p>
+                Access eligible digital
+                products after payment.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- REFERRAL -->
+{% if current_user.is_authenticated %}
+
+<section class="referral-banner">
+
+    <div>
+
+        <span class="section-label">
+            REFERRAL PROGRAM
+        </span>
+
+        <h2>
+            Invite Friends & Earn Rewards 🎁
+        </h2>
+
+        <p>
+            Share your referral link and earn rewards
+            when eligible referrals complete the requirements.
+        </p>
+
+    </div>
+
+    <a href="{{ url_for('referrals') }}"
+       class="btn btn-primary">
+
+        View Referral Dashboard
+
+    </a>
+
+</section>
+
+{% else %}
+
+<section class="cta-section">
+
+    <div class="cta-content">
+
+        <span class="section-label">
+            JOIN DC SOCIAL LOGS
+        </span>
+
+        <h2>
+            Ready to explore your
+            <span>digital world?</span>
+        </h2>
+
+        <p>
+            Create your account and start discovering
+            digital products today.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a href="{{ url_for('register') }}"
+               class="btn btn-primary">
+
+                Create Free Account
+
+            </a>
+
+            <a href="{{ url_for('products') }}"
+               class="btn btn-secondary">
+
+                Browse Products
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endif %}
+
+{% endblock %}

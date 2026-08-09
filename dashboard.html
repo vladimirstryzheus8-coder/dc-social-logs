@@ -1,0 +1,763 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dashboard | DC SOCIAL LOGS 🪵
+{% endblock %}
+
+{% block content %}
+
+<section class="dashboard-page">
+
+    <!-- DASHBOARD HEADER -->
+
+    <div class="dashboard-header">
+
+        <div>
+
+            <span class="section-label">
+                MY ACCOUNT
+            </span>
+
+            <h1>
+                Welcome back,
+                <span>{{ current_user.username }}</span> 👋
+            </h1>
+
+            <p>
+                Manage your wallet, orders, purchases and referrals.
+            </p>
+
+        </div>
+
+
+        <div class="dashboard-header-actions">
+
+            <a
+                href="{{ url_for('products') }}"
+                class="btn btn-primary">
+
+                🛍️ Shop Products
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- STAT CARDS -->
+
+    <div class="stats-grid">
+
+        <!-- WALLET -->
+
+        <div class="stat-card wallet-stat">
+
+            <div class="stat-icon">
+                💰
+            </div>
+
+            <div class="stat-info">
+
+                <span>
+                    Wallet Balance
+                </span>
+
+                <strong>
+
+                    ₦{{ "{:,.2f}".format(
+                        wallet_balance|default(
+                            current_user.wallet_balance|default(0)
+                        )|float
+                    ) }}
+
+                </strong>
+
+            </div>
+
+            <a
+                href="{{ url_for('wallet') }}"
+                class="stat-link">
+
+                →
+
+            </a>
+
+        </div>
+
+
+        <!-- ORDERS -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🧾
+            </div>
+
+            <div class="stat-info">
+
+                <span>
+                    Total Orders
+                </span>
+
+                <strong>
+                    {{ total_orders|default(0) }}
+                </strong>
+
+            </div>
+
+            <a
+                href="{{ url_for('orders') }}"
+                class="stat-link">
+
+                →
+
+            </a>
+
+        </div>
+
+
+        <!-- DEPOSITS -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                💳
+            </div>
+
+            <div class="stat-info">
+
+                <span>
+                    Total Deposit
+                </span>
+
+                <strong>
+
+                    ₦{{ "{:,.2f}".format(
+                        total_deposit|default(0)|float
+                    ) }}
+
+                </strong>
+
+            </div>
+
+            <a
+                href="{{ url_for('wallet') }}"
+                class="stat-link">
+
+                →
+
+            </a>
+
+        </div>
+
+
+        <!-- SPENT -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🛍️
+            </div>
+
+            <div class="stat-info">
+
+                <span>
+                    Total Spent
+                </span>
+
+                <strong>
+
+                    ₦{{ "{:,.2f}".format(
+                        total_spent|default(0)|float
+                    ) }}
+
+                </strong>
+
+            </div>
+
+            <a
+                href="{{ url_for('orders') }}"
+                class="stat-link">
+
+                →
+
+            </a>
+
+        </div>
+
+
+        <!-- REFERRAL -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🎁
+            </div>
+
+            <div class="stat-info">
+
+                <span>
+                    Referral Earnings
+                </span>
+
+                <strong>
+
+                    ₦{{ "{:,.2f}".format(
+                        referral_earnings|default(0)|float
+                    ) }}
+
+                </strong>
+
+            </div>
+
+            <a
+                href="{{ url_for('referrals') }}"
+                class="stat-link">
+
+                →
+
+            </a>
+
+        </div>
+
+
+        <!-- NOTIFICATIONS -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🔔
+            </div>
+
+            <div class="stat-info">
+
+                <span>
+                    Notifications
+                </span>
+
+                <strong>
+                    {{ unread_notifications|default(0) }}
+                </strong>
+
+            </div>
+
+            <a
+                href="{{ url_for('notifications') }}"
+                class="stat-link">
+
+                →
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- QUICK ACTIONS -->
+
+    <section class="dashboard-section">
+
+        <div class="section-title-row">
+
+            <div>
+
+                <span class="section-label">
+                    QUICK ACTIONS
+                </span>
+
+                <h2>
+                    What would you like to do?
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="quick-actions-grid">
+
+            <a
+                href="{{ url_for('products') }}"
+                class="quick-action-card">
+
+                <div class="quick-action-icon">
+                    🛍️
+                </div>
+
+                <div>
+
+                    <strong>
+                        Browse Products
+                    </strong>
+
+                    <span>
+                        Explore our marketplace
+                    </span>
+
+                </div>
+
+                <span>→</span>
+
+            </a>
+
+
+            <a
+                href="{{ url_for('wallet') }}"
+                class="quick-action-card">
+
+                <div class="quick-action-icon">
+                    💰
+                </div>
+
+                <div>
+
+                    <strong>
+                        Deposit Funds
+                    </strong>
+
+                    <span>
+                        Add money to your wallet
+                    </span>
+
+                </div>
+
+                <span>→</span>
+
+            </a>
+
+
+            <a
+                href="{{ url_for('orders') }}"
+                class="quick-action-card">
+
+                <div class="quick-action-icon">
+                    📦
+                </div>
+
+                <div>
+
+                    <strong>
+                        My Orders
+                    </strong>
+
+                    <span>
+                        View your purchase history
+                    </span>
+
+                </div>
+
+                <span>→</span>
+
+            </a>
+
+
+            <a
+                href="{{ url_for('referrals') }}"
+                class="quick-action-card">
+
+                <div class="quick-action-icon">
+                    🎁
+                </div>
+
+                <div>
+
+                    <strong>
+                        Refer & Earn
+                    </strong>
+
+                    <span>
+                        Invite friends and earn rewards
+                    </span>
+
+                </div>
+
+                <span>→</span>
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- RECENT ORDERS + WALLET -->
+
+    <div class="dashboard-columns">
+
+
+        <!-- RECENT ORDERS -->
+
+        <section class="dashboard-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <span class="section-label">
+                        PURCHASES
+                    </span>
+
+                    <h2>
+                        Recent Orders
+                    </h2>
+
+                </div>
+
+                <a href="{{ url_for('orders') }}">
+                    View All →
+                </a>
+
+            </div>
+
+
+            {% if recent_orders %}
+
+                <div class="recent-orders">
+
+                    {% for order in recent_orders %}
+
+                        <div class="recent-order">
+
+                            <div class="order-icon">
+                                📦
+                            </div>
+
+
+                            <div class="order-info">
+
+                                <strong>
+                                    #{{ order.order_number or order.id }}
+                                </strong>
+
+                                <span>
+
+                                    {{ order.created_at.strftime(
+                                        '%d %b %Y'
+                                    ) if order.created_at else '' }}
+
+                                </span>
+
+                            </div>
+
+
+                            <div class="order-price">
+
+                                <strong>
+
+                                    ₦{{ "{:,.2f}".format(
+                                        order.total|float
+                                    ) }}
+
+                                </strong>
+
+                                <span
+                                    class="order-status
+                                    {{ order.status|lower }}">
+
+                                    {{ order.status }}
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="panel-empty">
+
+                    <div>
+                        🧾
+                    </div>
+
+                    <h3>
+                        No Orders Yet
+                    </h3>
+
+                    <p>
+                        Your recent purchases will appear here.
+                    </p>
+
+                    <a
+                        href="{{ url_for('products') }}"
+                        class="btn btn-primary">
+
+                        Start Shopping
+
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- RECENT TRANSACTIONS -->
+
+        <section class="dashboard-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <span class="section-label">
+                        WALLET
+                    </span>
+
+                    <h2>
+                        Recent Transactions
+                    </h2>
+
+                </div>
+
+                <a href="{{ url_for('wallet') }}">
+                    View Wallet →
+                </a>
+
+            </div>
+
+
+            {% if recent_transactions %}
+
+                <div class="recent-transactions">
+
+                    {% for transaction in recent_transactions %}
+
+                        <div class="recent-transaction">
+
+                            <div class="transaction-icon">
+
+                                {% if transaction.type == 'Deposit' %}
+                                    💳
+                                {% elif transaction.type == 'Purchase' %}
+                                    🛍️
+                                {% elif transaction.type == 'Refund' %}
+                                    ↩️
+                                {% elif transaction.type == 'Referral Reward' %}
+                                    🎁
+                                {% else %}
+                                    💰
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="transaction-info">
+
+                                <strong>
+                                    {{ transaction.type }}
+                                </strong>
+
+                                <span>
+
+                                    {{ transaction.created_at.strftime(
+                                        '%d %b %Y'
+                                    ) if transaction.created_at else '' }}
+
+                                </span>
+
+                            </div>
+
+
+                            <div class="transaction-amount
+                                {% if transaction.type in [
+                                    'Deposit',
+                                    'Refund',
+                                    'Referral Reward'
+                                ] %}
+                                    positive
+                                {% else %}
+                                    negative
+                                {% endif %}">
+
+                                {% if transaction.type in [
+                                    'Deposit',
+                                    'Refund',
+                                    'Referral Reward'
+                                ] %}
+                                    +
+                                {% else %}
+                                    -
+                                {% endif %}
+
+                                ₦{{ "{:,.2f}".format(
+                                    transaction.amount|float
+                                ) }}
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="panel-empty">
+
+                    <div>
+                        💰
+                    </div>
+
+                    <h3>
+                        No Transactions Yet
+                    </h3>
+
+                    <p>
+                        Your wallet transactions will appear here.
+                    </p>
+
+                    <a
+                        href="{{ url_for('wallet') }}"
+                        class="btn btn-primary">
+
+                        Open Wallet
+
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+    </div>
+
+
+    <!-- REFERRAL CARD -->
+
+    <section class="dashboard-referral">
+
+        <div class="referral-content">
+
+            <span class="section-label">
+                REFERRAL PROGRAM
+            </span>
+
+            <h2>
+                Earn Rewards By Referring Friends 🎁
+            </h2>
+
+            <p>
+                Share your unique referral link with friends
+                and earn rewards when eligible referrals
+                complete the configured requirements.
+            </p>
+
+            {% if current_user.referral_code %}
+
+                <div class="referral-link-box">
+
+                    <input
+                        type="text"
+                        id="referralLink"
+                        value="{{ request.url_root }}register?ref={{ current_user.referral_code }}"
+                        readonly
+                    >
+
+                    <button
+                        type="button"
+                        onclick="copyReferralLink()">
+
+                        📋 Copy
+
+                    </button>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <a
+            href="{{ url_for('referrals') }}"
+            class="btn btn-light">
+
+            Referral Dashboard →
+
+        </a>
+
+    </section>
+
+
+    <!-- ACCOUNT STATUS -->
+
+    <section class="account-status">
+
+        <div>
+
+            <span class="status-icon">
+                ✓
+            </span>
+
+            <div>
+
+                <strong>
+                    Account Active
+                </strong>
+
+                <p>
+                    Your DC SOCIAL LOGS account is active and ready to use.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('settings') }}"
+            class="btn btn-secondary">
+
+            ⚙️ Account Settings
+
+        </a>
+
+    </section>
+
+</section>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script>
+
+function copyReferralLink() {
+
+    const input =
+        document.getElementById("referralLink");
+
+    if (!input) return;
+
+    navigator.clipboard.writeText(input.value)
+        .then(function () {
+
+            alert("Referral link copied!");
+
+        })
+        .catch(function () {
+
+            input.select();
+
+            document.execCommand("copy");
+
+            alert("Referral link copied!");
+
+        });
+
+}
+
+</script>
+
+{% endblock %}

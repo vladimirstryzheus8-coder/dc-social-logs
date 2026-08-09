@@ -1,0 +1,300 @@
+{% extends "base.html" %}
+
+{% block title %}
+Create Account | DC SOCIAL LOGS 🪵
+{% endblock %}
+
+{% block content %}
+
+<section class="auth-page">
+
+    <div class="auth-container">
+
+        <div class="auth-brand">
+
+            <div class="auth-logo">
+                🪵
+            </div>
+
+            <h1>
+                Create Your Account
+            </h1>
+
+            <p>
+                Join DC SOCIAL LOGS and explore your digital world.
+            </p>
+
+        </div>
+
+
+        <div class="auth-card">
+
+            <form method="POST"
+                  action="{{ url_for('register') }}"
+                  class="auth-form">
+
+                <div class="form-group">
+
+                    <label for="full_name">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="full_name"
+                        name="full_name"
+                        placeholder="Enter your full name"
+                        autocomplete="name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="username">
+                        Username
+                    </label>
+
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Choose a username"
+                        autocomplete="username"
+                        minlength="3"
+                        required
+                    >
+
+                    <small>
+                        Your username must be unique.
+                    </small>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="you@example.com"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="phone">
+                        Phone Number
+                        <span class="optional">
+                            Optional
+                        </span>
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        placeholder="+234..."
+                        autocomplete="tel"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <div class="password-input">
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Create a strong password"
+                            autocomplete="new-password"
+                            minlength="8"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            data-target="password"
+                            aria-label="Show password">
+
+                            👁️
+
+                        </button>
+
+                    </div>
+
+                    <small>
+                        Use at least 8 characters.
+                    </small>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="confirm_password">
+                        Confirm Password
+                    </label>
+
+                    <div class="password-input">
+
+                        <input
+                            type="password"
+                            id="confirm_password"
+                            name="confirm_password"
+                            placeholder="Confirm your password"
+                            autocomplete="new-password"
+                            minlength="8"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            data-target="confirm_password"
+                            aria-label="Show password">
+
+                            👁️
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="referral_code">
+
+                        Referral Code
+
+                        <span class="optional">
+                            Optional
+                        </span>
+
+                    </label>
+
+                    <input
+                        type="text"
+                        id="referral_code"
+                        name="referral_code"
+                        value="{{ referral_code or '' }}"
+                        placeholder="Enter referral code"
+                        maxlength="50"
+                    >
+
+                    <small>
+                        Have a referral code? Enter it here.
+                    </small>
+
+                </div>
+
+
+                <div class="terms-row">
+
+                    <label class="checkbox-label">
+
+                        <input
+                            type="checkbox"
+                            id="agree"
+                            name="agree"
+                            required
+                        >
+
+                        <span>
+                            I agree to the
+                            <a href="#">
+                                Terms & Conditions
+                            </a>
+                            and
+                            <a href="#">
+                                Privacy Policy
+                            </a>.
+                        </span>
+
+                    </label>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary auth-submit">
+
+                    ✨ Create Account
+
+                </button>
+
+            </form>
+
+
+            <div class="auth-divider">
+
+                <span>ALREADY HAVE AN ACCOUNT?</span>
+
+            </div>
+
+
+            <div class="auth-register">
+
+                <a href="{{ url_for('login') }}"
+                   class="btn btn-secondary auth-register-btn">
+
+                    🔐 Login Instead
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="auth-footer">
+
+            <span>
+                🔒 Secure Registration
+            </span>
+
+            <span>
+                •
+            </span>
+
+            <span>
+                ⚡ Fast Access
+            </span>
+
+            <span>
+                •
+            </span>
+
+            <span>
+                🪵 DC SOCIAL LOGS
+            </span>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

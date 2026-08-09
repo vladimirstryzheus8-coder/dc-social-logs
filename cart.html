@@ -1,0 +1,537 @@
+{% extends "base.html" %}
+
+{% block title %}
+Shopping Cart | DC SOCIAL LOGS 🪵
+{% endblock %}
+
+{% block content %}
+
+<section class="page-header">
+
+    <div>
+        <span class="section-label">YOUR SHOPPING CART</span>
+
+        <h1>
+            Shopping <span>Cart</span>
+        </h1>
+
+        <p>
+            Review your selected products before checkout.
+        </p>
+    </div>
+
+</section>
+
+
+{% if cart and cart.items %}
+
+<div class="cart-layout">
+
+    <!-- CART ITEMS -->
+
+    <section class="cart-items-section">
+
+        <div class="cart-section-header">
+
+            <div>
+                <h2>
+                    Cart Items
+                </h2>
+
+                <p>
+                    {{ cart.items|length }}
+                    item{% if cart.items|length != 1 %}s{% endif %}
+                </p>
+            </div>
+
+            <form
+                method="POST"
+                action="{{ url_for('clear_cart') }}"
+                onsubmit="return confirm('Are you sure you want to clear your cart?');">
+
+                <button
+                    type="submit"
+                    class="clear-cart-btn">
+
+                    🗑️ Clear Cart
+
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <div class="cart-items">
+
+            {% for item in cart.items %}
+
+            <article class="cart-item">
+
+                <!-- IMAGE -->
+
+                <a
+                    href="{{ url_for(
+                        'product_detail',
+                        slug=item.product.slug
+                    ) }}"
+                    class="cart-item-image">
+
+                    {% if item.product.image %}
+
+                        <img
+                            src="{{ item.product.image }}"
+                            alt="{{ item.product.name }}"
+                        >
+
+                    {% else %}
+
+                        <div class="product-placeholder">
+                            🛍️
+                        </div>
+
+                    {% endif %}
+
+                </a>
+
+
+                <!-- DETAILS -->
+
+                <div class="cart-item-details">
+
+                    <span class="product-category">
+
+                        {% if item.product.category %}
+                            {{ item.product.category.name }}
+                        {% else %}
+                            Digital Product
+                        {% endif %}
+
+                    </span>
+
+
+                    <h3>
+
+                        <a
+                            href="{{ url_for(
+                                'product_detail',
+                                slug=item.product.slug
+                            ) }}">
+
+                            {{ item.product.name }}
+
+                        </a>
+
+                    </h3>
+
+
+                    <p>
+
+                        ₦{{ "{:,.2f}".format(
+                            item.product.price|float
+                        ) }}
+
+                        each
+
+                    </p>
+
+
+                    {% if item.product.stock <= 0 %}
+
+                        <span class="cart-stock-error">
+                            Out of Stock
+                        </span>
+
+                    {% elif item.quantity > item.product.stock %}
+
+                        <span class="cart-stock-error">
+                            Only {{ item.product.stock }} available
+                        </span>
+
+                    {% else %}
+
+                        <span class="cart-stock-ok">
+                            ✓ In Stock
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- QUANTITY -->
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'update_cart',
+                        item_id=item.id
+                    ) }}"
+                    class="cart-quantity-form">
+
+                    <button
+                        type="button"
+                        class="quantity-btn"
+                        onclick="changeQuantity(
+                            this,
+                            -1
+                        )">
+
+                        −
+
+                    </button>
+
+                    <input
+                        type="number"
+                        name="quantity"
+                        value="{{ item.quantity }}"
+                        min="1"
+                        max="{{ item.product.stock }}"
+                        class="cart-quantity-input"
+                        onchange="this.form.submit()"
+                    >
+
+                    <button
+                        type="button"
+                        class="quantity-btn"
+                        onclick="changeQuantity(
+                            this,
+                            1
+                        )">
+
+                        +
+
+                    </button>
+
+                </form>
+
+
+                <!-- ITEM TOTAL -->
+
+                <div class="cart-item-total">
+
+                    <strong>
+
+                        ₦{{ "{:,.2f}".format(
+                            (item.product.price|float *
+                             item.quantity)
+                        ) }}
+
+                    </strong>
+
+
+                    <form
+                        method="POST"
+                        action="{{ url_for(
+                            'remove_from_cart',
+                            item_id=item.id
+                        ) }}">
+
+                        <button
+                            type="submit"
+                            class="remove-item-btn"
+                            title="Remove item">
+
+                            ×
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    <!-- ORDER SUMMARY -->
+
+    <aside class="cart-summary">
+
+        <div class="summary-card">
+
+            <h2>
+                Order Summary
+            </h2>
+
+
+            <!-- SUBTOTAL -->
+
+            <div class="summary-row">
+
+                <span>
+                    Subtotal
+                </span>
+
+                <strong>
+
+                    ₦{{ "{:,.2f}".format(
+                        subtotal|float
+                    ) }}
+
+                </strong>
+
+            </div>
+
+
+            <!-- BULK DISCOUNT -->
+
+            {% if discount and discount > 0 %}
+
+            <div class="summary-row discount-row">
+
+                <span>
+                    Bulk Discount
+                </span>
+
+                <strong>
+                    -₦{{ "{:,.2f}".format(
+                        discount|float
+                    ) }}
+                </strong>
+
+            </div>
+
+            {% else %}
+
+            <div class="bulk-info">
+
+                🏷️
+
+                <span>
+                    Buy eligible quantities and
+                    save up to 5%.
+                </span>
+
+            </div>
+
+            {% endif %}
+
+
+            <div class="summary-divider"></div>
+
+
+            <!-- TOTAL -->
+
+            <div class="summary-total">
+
+                <span>
+                    Total
+                </span>
+
+                <strong>
+
+                    ₦{{ "{:,.2f}".format(
+                        total|float
+                    ) }}
+
+                </strong>
+
+            </div>
+
+
+            <!-- CHECKOUT -->
+
+            {% if current_user.is_authenticated %}
+
+                <a
+                    href="{{ url_for('checkout') }}"
+                    class="btn btn-primary checkout-btn">
+
+                    💳 Proceed To Checkout
+
+                </a>
+
+            {% else %}
+
+                <a
+                    href="{{ url_for('login') }}"
+                    class="btn btn-primary checkout-btn">
+
+                    🔐 Login To Checkout
+
+                </a>
+
+            {% endif %}
+
+
+            <a
+                href="{{ url_for('products') }}"
+                class="continue-shopping">
+
+                ← Continue Shopping
+
+            </a>
+
+
+            <!-- PAYMENT INFO -->
+
+            <div class="checkout-security">
+
+                <div>
+                    🔒
+                </div>
+
+                <div>
+
+                    <strong>
+                        Secure Checkout
+                    </strong>
+
+                    <p>
+                        Payments are processed securely.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- WALLET -->
+
+        {% if current_user.is_authenticated %}
+
+        <div class="wallet-mini-card">
+
+            <div>
+
+                <span>
+                    Wallet Balance
+                </span>
+
+                <strong>
+
+                    ₦{{ "{:,.2f}".format(
+                        current_user.wallet_balance|default(0)|float
+                    ) }}
+
+                </strong>
+
+            </div>
+
+            <a
+                href="{{ url_for('wallet') }}">
+
+                💰 Deposit
+
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </aside>
+
+</div>
+
+
+<!-- BULK DISCOUNT NOTICE -->
+
+<section class="cart-promo">
+
+    <div class="cart-promo-icon">
+        🏷️
+    </div>
+
+    <div>
+
+        <strong>
+            Bulk Purchase Discount
+        </strong>
+
+        <p>
+            Eligible purchases between 1–5 units
+            can receive a 5% discount according to
+            the configured marketplace rules.
+        </p>
+
+    </div>
+
+</section>
+
+
+{% else %}
+
+<!-- EMPTY CART -->
+
+<section class="empty-state cart-empty">
+
+    <div class="empty-icon">
+        🛒
+    </div>
+
+    <h2>
+        Your Cart Is Empty
+    </h2>
+
+    <p>
+        You haven't added any products to your cart yet.
+        Explore our marketplace and find something you like.
+    </p>
+
+    <a
+        href="{{ url_for('products') }}"
+        class="btn btn-primary">
+
+        🛍️ Start Shopping
+
+    </a>
+
+</section>
+
+{% endif %}
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script>
+
+function changeQuantity(button, amount) {
+
+    const form = button.closest("form");
+
+    const input =
+        form.querySelector(
+            ".cart-quantity-input"
+        );
+
+    let value =
+        parseInt(input.value || 1);
+
+    const min =
+        parseInt(input.min || 1);
+
+    const max =
+        parseInt(input.max || 999999);
+
+
+    value += amount;
+
+
+    if (value < min) {
+        value = min;
+    }
+
+    if (value > max) {
+        value = max;
+    }
+
+
+    input.value = value;
+
+    form.submit();
+
+}
+
+</script>
+
+{% endblock %}

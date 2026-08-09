@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}DC SOCIAL LOGS 🪵 | Your Digital World, Delivered Instantly.{% endblock %}
+    </title>
+
+    <meta name="description"
+          content="DC SOCIAL LOGS 🪵 — Your Digital World, Delivered Instantly. Discover premium digital products, services, and subscriptions — all in one place.">
+
+    <meta name="theme-color" content="#0f172a">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪵</text></svg>">
+
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+
+<!-- =========================================================
+     NAVIGATION
+========================================================= -->
+
+<header class="site-header">
+
+    <nav class="navbar">
+
+        <a href="{{ url_for('index') }}" class="brand">
+            <span class="brand-icon">🪵</span>
+
+            <span class="brand-text">
+                <strong>DC SOCIAL LOGS</strong>
+                <small>Your Digital World</small>
+            </span>
+        </a>
+
+        <!-- Desktop Navigation -->
+
+        <div class="desktop-nav">
+
+            <a href="{{ url_for('index') }}">
+                Home
+            </a>
+
+            <a href="{{ url_for('products') }}">
+                Products
+            </a>
+
+            <a href="{{ url_for('categories') }}">
+                Categories
+            </a>
+
+            <a href="{{ url_for('how_it_works') }}">
+                How It Works
+            </a>
+
+            <a href="{{ url_for('faq') }}">
+                FAQ
+            </a>
+
+            <a href="{{ url_for('about') }}">
+                About Us
+            </a>
+
+        </div>
+
+        <!-- Right Side -->
+
+        <div class="nav-actions">
+
+            {% if current_user.is_authenticated %}
+
+                <a href="{{ url_for('cart') }}"
+                   class="nav-icon-button"
+                   title="Cart">
+
+                    🛒
+
+                    {% if current_user.cart and current_user.cart.items %}
+                        <span class="cart-count">
+                            {{ current_user.cart.items|length }}
+                        </span>
+                    {% endif %}
+
+                </a>
+
+                <a href="{{ url_for('notifications') }}"
+                   class="nav-icon-button"
+                   title="Notifications">
+
+                    🔔
+
+                    {% set unread = current_user.notifications
+                        |selectattr('is_read', 'equalto', false)
+                        |list
+                        |length
+                    %}
+
+                    {% if unread > 0 %}
+                        <span class="notification-count">
+                            {{ unread }}
+                        </span>
+                    {% endif %}
+
+                </a>
+
+                <a href="{{ url_for('dashboard') }}"
+                   class="user-button">
+
+                    <span class="user-avatar">
+                        {{ current_user.username[0]|upper }}
+                    </span>
+
+                    <span class="user-name">
+                        {{ current_user.username }}
+                    </span>
+
+                </a>
+
+            {% else %}
+
+                <a href="{{ url_for('login') }}"
+                   class="login-button">
+                    Login
+                </a>
+
+                <a href="{{ url_for('register') }}"
+                   class="register-button">
+                    Register
+                </a>
+
+            {% endif %}
+
+            <button
+                type="button"
+                class="theme-toggle"
+                id="themeToggle"
+                title="Change theme">
+
+                🌙
+
+            </button>
+
+            <button
+                type="button"
+                class="menu-toggle"
+                id="menuToggle"
+                aria-label="Open menu">
+
+                ☰
+
+            </button>
+
+        </div>
+
+    </nav>
+
+</header>
+
+
+<!-- =========================================================
+     MOBILE MENU
+========================================================= -->
+
+<div class="mobile-menu" id="mobileMenu">
+
+    <div class="mobile-menu-header">
+
+        <div>
+            <strong>DC SOCIAL LOGS 🪵</strong>
+
+            <small>

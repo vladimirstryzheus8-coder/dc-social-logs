@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}
+Login | DC SOCIAL LOGS 🪵
+{% endblock %}
+
+{% block content %}
+
+<section class="auth-page">
+
+    <div class="auth-container">
+
+        <div class="auth-brand">
+            <div class="auth-logo">🪵</div>
+
+            <h1>
+                Welcome Back
+            </h1>
+
+            <p>
+                Login to your DC SOCIAL LOGS account.
+            </p>
+        </div>
+
+
+        <div class="auth-card">
+
+            <form method="POST"
+                  action="{{ url_for('login') }}"
+                  class="auth-form">
+
+                <div class="form-group">
+
+                    <label for="login">
+                        Email or Username
+                    </label>
+
+                    <input
+                        type="text"
+                        id="login"
+                        name="login"
+                        placeholder="Enter your email or username"
+                        autocomplete="username"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <div class="form-label-row">
+
+                        <label for="password">
+                            Password
+                        </label>
+
+                        <a href="#">
+                            Forgot Password?
+                        </a>
+
+                    </div>
+
+                    <div class="password-input">
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            data-target="password"
+                            aria-label="Show password">
+
+                            👁️
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="remember-row">
+
+                    <label class="checkbox-label">
+
+                        <input
+                            type="checkbox"
+                            name="remember"
+                        >
+
+                        <span>
+                            Remember me
+                        </span>
+
+                    </label>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary auth-submit">
+
+                    🔐 Login
+
+                </button>
+
+            </form>
+
+
+            <div class="auth-divider">
+
+                <span>OR</span>
+
+            </div>
+
+
+            <div class="auth-register">
+
+                <p>
+                    Don't have an account?
+                </p>
+
+                <a href="{{ url_for('register') }}"
+                   class="btn btn-secondary auth-register-btn">
+
+                    Create Account
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="auth-footer">
+
+            <span>
+                🔒 Secure Account
+            </span>
+
+            <span>
+                •
+            </span>
+
+            <span>
+                🪵 DC SOCIAL LOGS
+            </span>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
